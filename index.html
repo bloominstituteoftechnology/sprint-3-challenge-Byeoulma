@@ -101,7 +101,7 @@
     }
 
     // 👉 CHALLENGE 2 NerfGun
-    class NerfGun {
+    
       // 🧠 Constructor takes one argument: the total number of projectiles supported by the instance
       // 🧠 New instances initialize fully loaded and with the safety on
       // 🧠 Instances have a `shoot` method that takes no arguments:
@@ -115,11 +115,39 @@
       //      * When engaging the safety, return "Safety enabled!"
       //      * When disengaging the safety, return "Safety disabled!"
       // 🌟 HINT: instances need to keep track of their maximum capacity as well as their current capacity
+      class NerfGun {
+        constructor (totalProjectiles) {
+          this.capacity = totalProjectiles;
+          this.ammo = this.capacity;
+          this.safetyOn = true;
+        }
 
+        shoot() {
+          if(this.ammo > 0 && !this.safetyOn) {
+            this.ammo--;
+            return 'Bang!';
+          } else {
+            return 'Click!'
+          }
+        }
+
+        reload(number) {
+          if(typeof number === 'number' && number > 0) {
+            this.ammo = Math.min(this.capacity, this.ammo + number);
+            return `${this.ammo} projectiles left!`;
+          } else {
+            return 'Error reloading!';
+          }
+        }
+
+        toggleSafety() {
+          this.safetyOn = !this.safetyOn;
+          return this.safetyOn ? 'Safety enabled!' : 'Safety disabled!';
+        }
     }
 
     // 👉 CHALLENGE 3 EBook
-    class EBook {
+    
       // 🧠 Constructor takes two arguments:
       //      * First arg is a string with the whole text of the book
       //      * Second arg is the number of characters contained in a single page of the book
@@ -134,11 +162,31 @@
       //    ebook.next() // returns null
       // 🌟 HINT: remember about the `slice` method which strings and arrays have
       // ❗ Feel free to implement `back`, although this is not required nor graded
+      class EBook {
+        constructor (bookText, characterPerpage) {
+          this.bookText = bookText;
+          this.characterPerpage = characterPerpage;
+          this.currentPage = 0;
+        }
+
+
+        next() {
+          const start = this.currentPage * this.characterPerpage;
+          const end = (this.currentPage + 1) * this.characterPerpage;
+
+          if(start < this.bookText.length) {
+            const page = this.bookText.slice(start, end);
+            this.currentPage++;
+            return page;
+          } else {
+            return null;
+          }
+        }
 
     }
 
     // 👉 CHALLENGE 4 AntFarm
-    class AntFarm {
+    
       // 🧠 Constructor takes **any** number of arguments, which are strings: the names of your ants
       // 🧠 Instances of AntFarm have an `ants` property holding an array of ants:
       //      * Each ant is an object with a `name` prop and a `health` prop that starts at 100
@@ -169,8 +217,35 @@
       //      console.log(list) // prints ["a"]
       // 👉 HINT: if you are not feeling confident with map and filter, solve the problem with for loops,
       //      and with the piece of mind of all tests passing, refactor to use map/filter
+      class AntFarm {
+  constructor(...antNames) {
+    this.ants = antNames.map(name => ({ name, health: 100 }));
+  }
 
+  work() {
+    if (this.ants.length === 0) {
+      return "No ants here. Did you work them to death?";
     }
+
+    const antCount = this.ants.length;
+    this.ants.forEach(ant => (ant.health -= 20));
+
+    this.ants = this.ants.filter(ant => ant.health > 0);
+
+    return `${antCount} ant${antCount !== 1 ? 's' : ''} starting work!`;
+  }
+
+  feed(antName) {
+  const antIndex = this.ants.findIndex((ant) => ant.name === antName);
+
+  if (antIndex !== -1) {
+    this.ants[antIndex].health += 15;
+    return 'Yum!';
+  } else {
+    return `${antName} not found!`;
+  }
+}
+}
 
     // 🧪 TESTS, do not make any changes below this line ===================
     // 🧪 TESTS, do not make any changes below this line ===================
